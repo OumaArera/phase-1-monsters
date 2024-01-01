@@ -15,10 +15,12 @@ const showAllMonsters = monster => {
     monId = mon.id;
     // Creating HTML tags 
     mon.innerHTML = `
+    <div>
         <h4>Name: ${monster.name}</h4>
-        <p>Age: ${monster.age}</p>
-        <br>
-        <p>Description: <span>${monster.description}</span></p>
+            <p>Age: ${monster.age}</p>
+            <br>
+            <p>Description: <span>${monster.description}</span></p>
+    </div>
     `;
     document.querySelector("#monster-container").appendChild(mon)
 }
@@ -43,29 +45,31 @@ const previousPage = () => {
   }
 // Event listener executes moving to the previous page 
   document.querySelector("#back").addEventListener('click', e => {e.preventDefault(); previousPage()})
-// Creates new monster form
+
+// Create a form card
+const newMon = document.createElement("form")
+newMon.id = 'new-mon';
+// Create Html tags
+newMon.innerHTML = `
+    <label for='name'>Name:</label>
+    <br>
+    <input type="text" id="name" name="name" placeholder="Enter name of monster">
+    <br>
+    <label for='age'>Age:</label>
+    <br>
+    <input type="text" id="age" name="age" placeholder="Enter age of monster">
+    <br>
+    <label for='description'>Description:</label>
+    <br>
+    <input type="text" id="description" name="description" placeholder="Enter description of monster">
+    <br>
+    <button style="font-size:1vw" id="add-monster-btn">Create Monster</button>
+`;
+// Append newMon to the div
+document.querySelector("#create-monster").appendChild(newMon)
+
+// POSTs new animal in the server
 const createMonster = () => {
-    // Create a form card
-    const newMon = document.createElement("form")
-    newMon.id = 'new-mon';
-    // Create Html tags
-    newMon.innerHTML = `
-        <label for='name'>Name:</label>
-        <br>
-        <input type="text" id="name" name="name" placeholder="Enter name of monster">
-        <br>
-        <label for='age'>Age:</label>
-        <br>
-        <input type="text" id="age" name="age" placeholder="Enter age of monster">
-        <br>
-        <label for='description'>Description:</label>
-        <br>
-        <input type="text" id="description" name="description" placeholder="Enter description of monster">
-        <br>
-        <button style="font-size:2vw" id="add-monster-btn">Create Monster</button>
-    `;
-    // Append newMon to the div
-    document.querySelector("#create-monster").appendChild(newMon)
     // Target and access new monster details
     let newName = document.querySelector("#name").textContent;
     let newAge = document.querySelector('#age').textContent;
@@ -81,6 +85,7 @@ const createMonster = () => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            "Accept": "application/json"
         },
         body: JSON.stringify(newMonster)
     })
@@ -89,4 +94,4 @@ const createMonster = () => {
     .catch(err => console.log(err))
 }
 // Event listener executes createMonster()
-document.querySelector("#add-monster-btn").addEventListener('click', e => { e.preventDefault();createMonster()})
+document.querySelector("#add-monster-btn").addEventListener('click', () => createMonster())
